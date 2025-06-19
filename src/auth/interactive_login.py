@@ -7,8 +7,8 @@ from typing import Dict, Optional, Tuple
 from urllib.parse import urlparse
 
 from rich.console import Console
-from rich.prompt import Prompt, Confirm
 from rich.panel import Panel
+from rich.prompt import Confirm, Prompt
 from rich.text import Text
 
 from ..utils.logger import get_logger

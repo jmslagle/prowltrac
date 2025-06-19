@@ -2,14 +2,14 @@
 High-level PlexTrac client for OCSF finding imports.
 """
 
-from typing import List, Dict, Any, Optional, Tuple, Callable
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from .api.endpoints import PlexTracAPI, Client, Report, Finding, PlexTracAPIError
-from .auth.auth_handler import AuthHandler, AuthenticationError
-from .utils.logger import get_logger
+from .api.endpoints import Client, Finding, PlexTracAPI, PlexTracAPIError, Report
+from .auth.auth_handler import AuthenticationError, AuthHandler
 from .utils.config import get_config
+from .utils.logger import get_logger
 
 
 @dataclass

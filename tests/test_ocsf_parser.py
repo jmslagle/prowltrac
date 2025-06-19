@@ -5,11 +5,11 @@ Tests for OCSF parser module.
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.ocsf_parser import OCSFParser, OCSFFinding
+from src.ocsf_parser import OCSFFinding, OCSFParser
 
 
 class TestOCSFParser:

@@ -3,9 +3,10 @@ Configuration management for Prowler OCSF to PlexTrac tool.
 """
 
 import os
-import yaml
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, List, Optional
+
+import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, validator
 

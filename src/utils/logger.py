@@ -6,6 +6,7 @@ import logging
 import logging.handlers
 from pathlib import Path
 from typing import Optional
+
 from .config import get_config
 
 

@@ -1,7 +1,8 @@
 """Tests for the filtering system."""
 
 import pytest
-from src.filters import FilterEngine, StatusFilter, SeverityFilter
+
+from src.filters import FilterEngine, SeverityFilter, StatusFilter
 from src.ocsf_parser import OCSFParser
 from tests.fixtures.sample_ocsf import get_sample_findings_list
 

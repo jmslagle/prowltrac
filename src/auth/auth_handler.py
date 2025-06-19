@@ -4,17 +4,18 @@ Based on PlexTrac-Labs authentication patterns with token caching support.
 """
 
 import time
-from typing import Dict, Optional, Any
 from datetime import datetime, timedelta
+from typing import Any, Dict, Optional
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from ..utils.logger import get_logger
 from ..utils.config import get_config, get_credentials
+from ..utils.logger import get_logger
 from ..utils.validators import validate_credentials
-from .token_cache import token_cache
 from .interactive_login import interactive_login
+from .token_cache import token_cache
 
 
 class AuthenticationError(Exception):

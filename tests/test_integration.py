@@ -1,13 +1,14 @@
 """Integration tests for the full workflow."""
 
-import pytest
-import tempfile
 import json
+import tempfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-from src.ocsf_parser import OCSFParser
+import pytest
+
 from src.filters import FilterEngine
+from src.ocsf_parser import OCSFParser
 from tests.fixtures.sample_ocsf import get_sample_findings_list
 
 

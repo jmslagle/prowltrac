@@ -2,11 +2,12 @@
 PlexTrac API endpoint wrappers.
 """
 
-from typing import List, Dict, Any, Optional, Union
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Union
+
 import requests
 
-from ..auth.auth_handler import AuthHandler, AuthenticationError
+from ..auth.auth_handler import AuthenticationError, AuthHandler
 from ..utils.logger import get_logger
 
 

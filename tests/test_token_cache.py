@@ -2,11 +2,11 @@
 Tests for token cache module.
 """
 
-import tempfile
 import json
-from pathlib import Path
+import tempfile
 from datetime import datetime, timedelta
-from unittest.mock import patch, MagicMock
+from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 

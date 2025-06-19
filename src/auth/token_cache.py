@@ -3,19 +3,20 @@ Token caching system for PlexTrac authentication.
 Securely stores and manages JWT tokens locally.
 """
 
-import json
-import os
-from pathlib import Path
-from typing import Dict, Optional, Any, List
-from datetime import datetime, timedelta
 import base64
 import hashlib
+import json
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-from ..utils.logger import get_logger
 from ..utils.config import get_config
+from ..utils.logger import get_logger
 
 
 class TokenCacheError(Exception):

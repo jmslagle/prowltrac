@@ -3,13 +3,13 @@ OCSF (Open Cybersecurity Schema Framework) parser for Prowler findings.
 """
 
 import json
-from pathlib import Path
-from typing import List, Dict, Any, Optional, Union
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
 from .utils.logger import get_logger
-from .utils.validators import validate_ocsf_file, validate_finding_data
+from .utils.validators import validate_finding_data, validate_ocsf_file
 
 # Try to import py-ocsf-models if available, but don't require it
 try:

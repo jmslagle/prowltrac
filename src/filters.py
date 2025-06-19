@@ -3,9 +3,9 @@ Comprehensive filtering system for OCSF findings.
 """
 
 import re
-from typing import List, Dict, Any, Optional, Set, Callable
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Set
 
 from .ocsf_parser import OCSFFinding
 from .utils.logger import get_logger

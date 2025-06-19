@@ -3,9 +3,10 @@ Validation utilities for Prowler OCSF to PlexTrac tool.
 """
 
 import re
-from typing import Dict, Any, List, Optional, Union
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
+
 from pydantic import BaseModel, Field, validator
 
 
