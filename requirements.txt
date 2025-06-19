@@ -1,0 +1,5 @@
+# Legacy requirements.txt - Use pyproject.toml for modern installations
+# For modern Python development, install with: pip install -e .
+# This file is kept for compatibility with older tools
+
+-e .

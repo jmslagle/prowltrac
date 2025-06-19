@@ -1,0 +1,160 @@
+# Prowler OCSF to PlexTrac Configuration
+
+# PlexTrac API Settings
+plextrac:
+  # Base URL for your PlexTrac instance (can be overridden by PLEXTRAC_URL env var)
+  url: "https://yourapp.plextrac.com"
+  
+  # Optional: API version (usually auto-detected)
+  api_version: "v2"
+  
+  # Timeout settings (seconds)
+  request_timeout: 30
+  auth_timeout: 60
+
+# Authentication & Token Caching
+auth:
+  # Enable token caching (default: true)
+  use_cache: true
+  
+  # Cache directory (default: ~/.prowltrac)
+  cache_dir: null
+  
+  # Automatically cleanup expired tokens on startup (default: true)
+  auto_cleanup: true
+  
+  # Enable interactive login prompts (default: false)
+  interactive_mode: false
+  
+  # Force new login (ignore cached tokens) (default: false)
+  force_new_login: false
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "prowltrac.log"
+  max_size_mb: 10
+  backup_count: 3
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# Import Settings
+import:
+  # Maximum number of findings to show in preview
+  max_preview: 100
+  
+  # Batch size for API requests
+  batch_size: 25
+  
+  # Automatically create reports if they don't exist
+  auto_create_reports: false
+  
+  # Default report template ID for new reports
+  default_report_template_id: null
+
+# Field Mapping Configuration
+mapping:
+  # OCSF Severity to PlexTrac Severity
+  severity:
+    1: "Critical"  # Critical
+    2: "High"      # High
+    3: "Medium"    # Medium
+    4: "Low"       # Low
+  
+  # OCSF Status to PlexTrac Status
+  status:
+    "New": "Open"
+    "Suppressed": "Closed"
+    "Unknown": "Open"
+  
+  # Maximum length for finding titles
+  max_title_length: 100
+  
+  # Fields to extract from OCSF unmapped data
+  compliance_fields:
+    - "Compliance"
+    - "References"
+    - "CIS"
+    - "NIST"
+    - "PCI"
+    - "SOC2"
+
+# Filter Presets
+filter_presets:
+  security_review:
+    name: "Security Review (Fails Only)"
+    description: "Failed findings for security reviews"
+    filters:
+      status: ["Failed"]
+      severity: ["Critical", "High", "Medium"]
+  
+  compliance_audit:
+    name: "Compliance Audit"
+    description: "All compliance-related findings"
+    filters:
+      status: ["Failed", "New"]
+      compliance: ["CIS", "NIST", "PCI-DSS"]
+  
+  production_focus:
+    name: "Production Environment"
+    description: "Critical production issues only"
+    filters:
+      status: ["Failed"]
+      severity: ["Critical", "High"]
+      resource_patterns: ["prod-*", "*-production"]
+  
+  critical_only:
+    name: "Critical Issues"
+    description: "Only critical severity findings"
+    filters:
+      status: ["Failed"]
+      severity: ["Critical"]
+  
+  all_findings:
+    name: "All Findings"
+    description: "Import all findings regardless of status"
+    filters:
+      status: ["Failed", "Success", "New", "Suppressed"]
+      severity: ["Critical", "High", "Medium", "Low"]
+
+# Cloud Provider Service Mapping
+services:
+  aws:
+    - "IAM"
+    - "S3"
+    - "EC2"
+    - "RDS"
+    - "Lambda"
+    - "CloudTrail"
+    - "CloudWatch"
+    - "KMS"
+    - "VPC"
+    - "ELB"
+  
+  azure:
+    - "Active Directory"
+    - "Storage Account"
+    - "Virtual Machine"
+    - "SQL Database"
+    - "Key Vault"
+    - "Monitor"
+    - "Network Security Group"
+  
+  gcp:
+    - "IAM"
+    - "Cloud Storage"
+    - "Compute Engine"
+    - "Cloud SQL"
+    - "Cloud KMS"
+    - "Cloud Logging"
+    - "VPC"
+
+# UI Settings
+ui:
+  # Theme (light, dark, auto)
+  theme: "auto"
+  
+  # Show debug information in UI
+  debug_mode: false
+  
+  # Refresh interval for progress updates (seconds)
+  progress_refresh: 0.5

@@ -1,0 +1,285 @@
+[
+  {
+    "activity_id": 1,
+    "activity_name": "Create",
+    "category_name": "Findings",
+    "category_uid": 2,
+    "class_name": "Security Finding",
+    "class_uid": 2001,
+    "cloud": {
+      "account": {
+        "name": "test-account",
+        "type": "AWS Account",
+        "type_id": 10,
+        "uid": "123456789012"
+      },
+      "org": {
+        "name": "test-org",
+        "uid": "o-1234567890"
+      },
+      "provider": "AWS",
+      "region": "us-east-1"
+    },
+    "count": 1,
+    "end_time": 1703689200000,
+    "finding": {
+      "created_time": 1703689200000,
+      "desc": "S3 bucket allows public read access",
+      "modified_time": 1703689200000,
+      "product_uid": "arn:aws:s3:::my-public-bucket",
+      "title": "S3 bucket is publicly readable",
+      "types": ["Security"],
+      "uid": "s3-public-read-check"
+    },
+    "message": "S3 bucket 'my-public-bucket' allows public read access which could expose sensitive data",
+    "metadata": {
+      "event_code": "s3_bucket_public_read",
+      "product": {
+        "name": "Prowler",
+        "uid": "prowler",
+        "vendor_name": "Prowler",
+        "version": "3.0.0"
+      },
+      "profiles": ["cloud"],
+      "version": "1.1.0"
+    },
+    "resources": [
+      {
+        "cloud_partition": "aws",
+        "region": "us-east-1",
+        "name": "my-public-bucket",
+        "type": "S3Bucket",
+        "uid": "arn:aws:s3:::my-public-bucket"
+      }
+    ],
+    "severity": "High",
+    "severity_id": 2,
+    "start_time": 1703689200000,
+    "status": "Failed",
+    "status_id": 1,
+    "time": 1703689200000,
+    "type_name": "Security Finding: Create",
+    "type_uid": 200101,
+    "unmapped": {
+      "Account": "123456789012",
+      "AccountName": "test-account",
+      "CheckCompliances": "CIS-1.4_1.20",
+      "CheckId": "s3_bucket_public_read",
+      "CheckTitle": "Ensure S3 buckets do not allow public read access",
+      "CheckType": ["Software and Configuration Checks", "AWS Security Best Practices"],
+      "Compliance": {
+        "CIS": ["1.20"],
+        "Requirements": "CIS CSC 14.6"
+      },
+      "Description": "This check ensures that S3 buckets do not have public read permissions.",
+      "Region": "us-east-1",
+      "Remediation": {
+        "Code": {
+          "CLI": "aws s3api put-bucket-acl --bucket my-public-bucket --acl private",
+          "NativeIaC": "",
+          "Other": "",
+          "Terraform": ""
+        },
+        "Recommendation": {
+          "Text": "Remove public read access from S3 bucket",
+          "Url": "https://docs.aws.amazon.com/s3/latest/userguide/access-control-block-public-access.html"
+        }
+      },
+      "ResourceId": "my-public-bucket",
+      "ResourceTags": {},
+      "ResourceType": "S3Bucket",
+      "ServiceName": "s3",
+      "Status": "FAIL",
+      "StatusExtended": "S3 Bucket my-public-bucket allows public read access."
+    }
+  },
+  {
+    "activity_id": 1,
+    "activity_name": "Create",
+    "category_name": "Findings",
+    "category_uid": 2,
+    "class_name": "Security Finding",
+    "class_uid": 2001,
+    "cloud": {
+      "account": {
+        "name": "test-account",
+        "type": "AWS Account",
+        "type_id": 10,
+        "uid": "123456789012"
+      },
+      "org": {
+        "name": "test-org",
+        "uid": "o-1234567890"
+      },
+      "provider": "AWS",
+      "region": "us-west-2"
+    },
+    "count": 1,
+    "end_time": 1703689200000,
+    "finding": {
+      "created_time": 1703689200000,
+      "desc": "IAM user has administrative privileges",
+      "modified_time": 1703689200000,
+      "product_uid": "arn:aws:iam::123456789012:user/admin-user",
+      "title": "IAM user has excessive permissions",
+      "types": ["Security"],
+      "uid": "iam-user-admin-privileges"
+    },
+    "message": "IAM user 'admin-user' has administrative privileges which violates the principle of least privilege",
+    "metadata": {
+      "event_code": "iam_user_admin_privileges",
+      "product": {
+        "name": "Prowler",
+        "uid": "prowler",
+        "vendor_name": "Prowler",
+        "version": "3.0.0"
+      },
+      "profiles": ["cloud"],
+      "version": "1.1.0"
+    },
+    "resources": [
+      {
+        "cloud_partition": "aws",
+        "region": "us-west-2",
+        "name": "admin-user",
+        "type": "IAMUser",
+        "uid": "arn:aws:iam::123456789012:user/admin-user"
+      }
+    ],
+    "severity": "Critical",
+    "severity_id": 1,
+    "start_time": 1703689200000,
+    "status": "Failed",
+    "status_id": 1,
+    "time": 1703689200000,
+    "type_name": "Security Finding: Create",
+    "type_uid": 200101,
+    "unmapped": {
+      "Account": "123456789012",
+      "AccountName": "test-account",
+      "CheckCompliances": "CIS-1.4_1.16",
+      "CheckId": "iam_user_admin_privileges",
+      "CheckTitle": "Ensure IAM users do not have administrative privileges",
+      "CheckType": ["Software and Configuration Checks", "AWS Identity and Access Management"],
+      "Compliance": {
+        "CIS": ["1.16"],
+        "NIST": ["AC-2", "AC-3"],
+        "Requirements": "CIS CSC 4.3"
+      },
+      "Description": "This check ensures that IAM users do not have administrative privileges.",
+      "Region": "us-west-2",
+      "Remediation": {
+        "Code": {
+          "CLI": "aws iam detach-user-policy --user-name admin-user --policy-arn arn:aws:iam::aws:policy/AdministratorAccess",
+          "NativeIaC": "",
+          "Other": "",
+          "Terraform": ""
+        },
+        "Recommendation": {
+          "Text": "Remove administrative privileges from IAM user and apply principle of least privilege",
+          "Url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege"
+        }
+      },
+      "ResourceId": "admin-user",
+      "ResourceTags": {},
+      "ResourceType": "IAMUser",
+      "ServiceName": "iam",
+      "Status": "FAIL",
+      "StatusExtended": "IAM User admin-user has administrative privileges."
+    }
+  },
+  {
+    "activity_id": 1,
+    "activity_name": "Create",
+    "category_name": "Findings",
+    "category_uid": 2,
+    "class_name": "Security Finding",
+    "class_uid": 2001,
+    "cloud": {
+      "account": {
+        "name": "test-account",
+        "type": "AWS Account",
+        "type_id": 10,
+        "uid": "123456789012"
+      },
+      "org": {
+        "name": "test-org",
+        "uid": "o-1234567890"
+      },
+      "provider": "AWS",
+      "region": "us-east-1"
+    },
+    "count": 1,
+    "end_time": 1703689200000,
+    "finding": {
+      "created_time": 1703689200000,
+      "desc": "CloudTrail logging is properly configured",
+      "modified_time": 1703689200000,
+      "product_uid": "arn:aws:cloudtrail:us-east-1:123456789012:trail/test-trail",
+      "title": "CloudTrail is properly configured",
+      "types": ["Security"],
+      "uid": "cloudtrail-configured"
+    },
+    "message": "CloudTrail 'test-trail' is properly configured with logging enabled",
+    "metadata": {
+      "event_code": "cloudtrail_configured",
+      "product": {
+        "name": "Prowler",
+        "uid": "prowler",
+        "vendor_name": "Prowler",
+        "version": "3.0.0"
+      },
+      "profiles": ["cloud"],
+      "version": "1.1.0"
+    },
+    "resources": [
+      {
+        "cloud_partition": "aws",
+        "region": "us-east-1",
+        "name": "test-trail",
+        "type": "CloudTrail",
+        "uid": "arn:aws:cloudtrail:us-east-1:123456789012:trail/test-trail"
+      }
+    ],
+    "severity": "Medium",
+    "severity_id": 3,
+    "start_time": 1703689200000,
+    "status": "Success",
+    "status_id": 2,
+    "time": 1703689200000,
+    "type_name": "Security Finding: Create",
+    "type_uid": 200101,
+    "unmapped": {
+      "Account": "123456789012",
+      "AccountName": "test-account",
+      "CheckCompliances": "CIS-1.4_2.1",
+      "CheckId": "cloudtrail_configured",
+      "CheckTitle": "Ensure CloudTrail is enabled in all regions",
+      "CheckType": ["Software and Configuration Checks", "AWS CloudTrail"],
+      "Compliance": {
+        "CIS": ["2.1"],
+        "Requirements": "CIS CSC 6.2"
+      },
+      "Description": "This check ensures that CloudTrail is properly configured.",
+      "Region": "us-east-1",
+      "Remediation": {
+        "Code": {
+          "CLI": "",
+          "NativeIaC": "",
+          "Other": "",
+          "Terraform": ""
+        },
+        "Recommendation": {
+          "Text": "CloudTrail is already properly configured",
+          "Url": "https://docs.aws.amazon.com/cloudtrail/latest/userguide/cloudtrail-user-guide.html"
+        }
+      },
+      "ResourceId": "test-trail",
+      "ResourceTags": {},
+      "ResourceType": "CloudTrail",
+      "ServiceName": "cloudtrail",
+      "Status": "PASS",
+      "StatusExtended": "CloudTrail test-trail is properly configured."
+    }
+  }
+]
