@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class PlexTracConfig(BaseModel):
@@ -19,7 +19,8 @@ class PlexTracConfig(BaseModel):
     request_timeout: int = Field(default=30, description="Request timeout in seconds")
     auth_timeout: int = Field(default=60, description="Authentication timeout in seconds")
 
-    @validator("url")
+    @field_validator("url")
+    @classmethod
     def validate_url(cls, v):
         if not v.startswith(("http://", "https://")):
             raise ValueError("URL must start with http:// or https://")

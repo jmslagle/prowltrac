@@ -233,7 +233,7 @@ class TokenCache:
                         }
                     )
 
-                except Exception:
+                except Exception:  # nosec B112 - Intentionally continuing on invalid cache entries
                     # Skip invalid entries
                     continue
 

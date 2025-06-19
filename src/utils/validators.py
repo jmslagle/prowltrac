@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class FilterCriteria(BaseModel):
@@ -23,7 +23,8 @@ class FilterCriteria(BaseModel):
     account_ids: Optional[List[str]] = Field(default=None, description="Account ID filters")
     regions: Optional[List[str]] = Field(default=None, description="Region filters")
 
-    @validator("status")
+    @field_validator("status")
+    @classmethod
     def validate_status(cls, v):
         if v is None:
             return v
@@ -33,7 +34,8 @@ class FilterCriteria(BaseModel):
                 raise ValueError(f"Invalid status: {status}. Must be one of {valid_statuses}")
         return v
 
-    @validator("severity")
+    @field_validator("severity")
+    @classmethod
     def validate_severity(cls, v):
         if v is None:
             return v
@@ -43,7 +45,8 @@ class FilterCriteria(BaseModel):
                 raise ValueError(f"Invalid severity: {severity}. Must be one of {valid_severities}")
         return v
 
-    @validator("resource_patterns")
+    @field_validator("resource_patterns")
+    @classmethod
     def validate_patterns(cls, v):
         if v is None:
             return v
@@ -56,7 +59,8 @@ class FilterCriteria(BaseModel):
                 raise ValueError(f"Invalid pattern: {pattern}")
         return v
 
-    @validator("account_ids")
+    @field_validator("account_ids")
+    @classmethod
     def validate_account_ids(cls, v):
         if v is None:
             return v

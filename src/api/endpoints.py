@@ -102,7 +102,7 @@ class PlexTracAPI:
                 error_data = {}
                 try:
                     error_data = response.json()
-                except:
+                except:  # nosec B110 - Intentionally ignoring JSON decode errors
                     pass
 
                 error_msg = error_data.get("message", f"HTTP {response.status_code}")
