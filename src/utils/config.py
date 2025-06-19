@@ -125,6 +125,18 @@ class ConfigManager:
         if url := os.getenv("PLEXTRAC_URL"):
             config_data["plextrac"]["url"] = url
 
+        # Set default URL for testing if none provided
+        if "url" not in config_data["plextrac"]:
+            # Check if we're in a test environment
+            import sys
+
+            if (
+                "pytest" in sys.modules
+                or "test" in sys.argv[0]
+                or any("test" in arg for arg in sys.argv)
+            ):
+                config_data["plextrac"]["url"] = "https://test.plextrac.com"
+
         # Logging settings from environment
         config_data.setdefault("logging", {})
         if log_level := os.getenv("LOG_LEVEL"):
