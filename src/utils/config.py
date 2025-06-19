@@ -125,16 +125,21 @@ class ConfigManager:
         if url := os.getenv("PLEXTRAC_URL"):
             config_data["plextrac"]["url"] = url
 
-        # Set default URL for testing if none provided
+        # Set default URL for testing/development if none provided
         if "url" not in config_data["plextrac"]:
-            # Check if we're in a test environment
+            # Check if we're in a test environment, CI, or development
             import sys
 
-            if (
+            is_test_env = (
                 "pytest" in sys.modules
                 or "test" in sys.argv[0]
                 or any("test" in arg for arg in sys.argv)
-            ):
+                or os.getenv("CI") == "true"  # GitHub Actions CI
+                or os.getenv("GITHUB_ACTIONS") == "true"  # GitHub Actions
+                or not os.getenv("PLEXTRAC_URL")  # No URL configured
+            )
+
+            if is_test_env:
                 config_data["plextrac"]["url"] = "https://test.plextrac.com"
 
         # Logging settings from environment
