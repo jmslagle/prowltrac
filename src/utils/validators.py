@@ -11,35 +11,38 @@ from pydantic import BaseModel, Field, validator
 
 class FilterCriteria(BaseModel):
     """Validation model for filter criteria."""
+
     status: Optional[List[str]] = Field(default=None, description="Status filters")
     severity: Optional[List[str]] = Field(default=None, description="Severity filters")
     compliance: Optional[List[str]] = Field(default=None, description="Compliance filters")
     services: Optional[List[str]] = Field(default=None, description="Service filters")
-    resource_patterns: Optional[List[str]] = Field(default=None, description="Resource pattern filters")
+    resource_patterns: Optional[List[str]] = Field(
+        default=None, description="Resource pattern filters"
+    )
     account_ids: Optional[List[str]] = Field(default=None, description="Account ID filters")
     regions: Optional[List[str]] = Field(default=None, description="Region filters")
-    
-    @validator('status')
+
+    @validator("status")
     def validate_status(cls, v):
         if v is None:
             return v
-        valid_statuses = ['Failed', 'Success', 'New', 'Suppressed', 'Unknown']
+        valid_statuses = ["Failed", "Success", "New", "Suppressed", "Unknown"]
         for status in v:
             if status not in valid_statuses:
-                raise ValueError(f'Invalid status: {status}. Must be one of {valid_statuses}')
+                raise ValueError(f"Invalid status: {status}. Must be one of {valid_statuses}")
         return v
-    
-    @validator('severity')
+
+    @validator("severity")
     def validate_severity(cls, v):
         if v is None:
             return v
-        valid_severities = ['Critical', 'High', 'Medium', 'Low']
+        valid_severities = ["Critical", "High", "Medium", "Low"]
         for severity in v:
             if severity not in valid_severities:
-                raise ValueError(f'Invalid severity: {severity}. Must be one of {valid_severities}')
+                raise ValueError(f"Invalid severity: {severity}. Must be one of {valid_severities}")
         return v
-    
-    @validator('resource_patterns')
+
+    @validator("resource_patterns")
     def validate_patterns(cls, v):
         if v is None:
             return v
@@ -47,19 +50,19 @@ class FilterCriteria(BaseModel):
         for pattern in v:
             try:
                 # Test if it's a valid regex (basic validation)
-                re.compile(pattern.replace('*', '.*'))
+                re.compile(pattern.replace("*", ".*"))
             except re.error:
-                raise ValueError(f'Invalid pattern: {pattern}')
+                raise ValueError(f"Invalid pattern: {pattern}")
         return v
-    
-    @validator('account_ids')
+
+    @validator("account_ids")
     def validate_account_ids(cls, v):
         if v is None:
             return v
         # Validate AWS account ID format (12 digits)
         for account_id in v:
-            if not re.match(r'^\d{12}$', account_id):
-                raise ValueError(f'Invalid AWS account ID format: {account_id}')
+            if not re.match(r"^\d{12}$", account_id):
+                raise ValueError(f"Invalid AWS account ID format: {account_id}")
         return v
 
 
@@ -84,136 +87,129 @@ def validate_file_path(file_path: Union[str, Path]) -> bool:
 def validate_ocsf_file(file_path: Union[str, Path]) -> Dict[str, Any]:
     """Validate OCSF file format and return basic info."""
     import json
-    
+
     result = {
-        'valid': False,
-        'error': None,
-        'finding_count': 0,
-        'file_size': 0,
-        'has_ocsf_structure': False
+        "valid": False,
+        "error": None,
+        "finding_count": 0,
+        "file_size": 0,
+        "has_ocsf_structure": False,
     }
-    
+
     try:
         path = Path(file_path)
         if not path.exists():
-            result['error'] = 'File does not exist'
+            result["error"] = "File does not exist"
             return result
-        
-        result['file_size'] = path.stat().st_size
-        
-        with open(path, 'r') as f:
+
+        result["file_size"] = path.stat().st_size
+
+        with open(path, "r") as f:
             data = json.load(f)
-        
+
         # Check if it's a list of findings or a single finding
         if isinstance(data, list):
             findings = data
         elif isinstance(data, dict):
             findings = [data]
         else:
-            result['error'] = 'Invalid JSON structure'
+            result["error"] = "Invalid JSON structure"
             return result
-        
-        result['finding_count'] = len(findings)
-        
+
+        result["finding_count"] = len(findings)
+
         # Basic OCSF structure validation
         if findings:
             first_finding = findings[0]
-            required_fields = ['message', 'severity_id', 'status']
+            required_fields = ["message", "severity_id", "status"]
             has_required = all(field in first_finding for field in required_fields)
-            
+
             # Check for OCSF-specific fields
-            ocsf_fields = ['class_name', 'category_name', 'metadata', 'cloud']
+            ocsf_fields = ["class_name", "category_name", "metadata", "cloud"]
             has_ocsf = any(field in first_finding for field in ocsf_fields)
-            
-            result['has_ocsf_structure'] = has_ocsf
-            result['valid'] = has_required
-            
+
+            result["has_ocsf_structure"] = has_ocsf
+            result["valid"] = has_required
+
             if not has_required:
-                result['error'] = f'Missing required OCSF fields: {required_fields}'
+                result["error"] = f"Missing required OCSF fields: {required_fields}"
         else:
-            result['error'] = 'No findings found in file'
-    
+            result["error"] = "No findings found in file"
+
     except json.JSONDecodeError as e:
-        result['error'] = f'Invalid JSON format: {str(e)}'
+        result["error"] = f"Invalid JSON format: {str(e)}"
     except Exception as e:
-        result['error'] = f'Error reading file: {str(e)}'
-    
+        result["error"] = f"Error reading file: {str(e)}"
+
     return result
 
 
 def validate_credentials(username: str, password: str, url: str) -> Dict[str, Any]:
     """Validate credential format."""
-    result = {
-        'valid': True,
-        'errors': []
-    }
-    
+    result = {"valid": True, "errors": []}
+
     if not username or len(username.strip()) == 0:
-        result['errors'].append('Username is required')
-    
+        result["errors"].append("Username is required")
+
     if not password or len(password.strip()) == 0:
-        result['errors'].append('Password is required')
-    
+        result["errors"].append("Password is required")
+
     if not validate_url(url):
-        result['errors'].append('Invalid URL format')
-    
-    result['valid'] = len(result['errors']) == 0
+        result["errors"].append("Invalid URL format")
+
+    result["valid"] = len(result["errors"]) == 0
     return result
 
 
 def validate_finding_data(finding: Dict[str, Any]) -> Dict[str, Any]:
     """Validate individual finding data structure."""
-    result = {
-        'valid': True,
-        'errors': [],
-        'warnings': []
-    }
-    
+    result = {"valid": True, "errors": [], "warnings": []}
+
     # Required fields
-    required_fields = ['message', 'severity_id', 'status']
+    required_fields = ["message", "severity_id", "status"]
     for field in required_fields:
         if field not in finding:
-            result['errors'].append(f'Missing required field: {field}')
-    
+            result["errors"].append(f"Missing required field: {field}")
+
     # Validate severity_id
-    if 'severity_id' in finding:
-        severity_id = finding['severity_id']
+    if "severity_id" in finding:
+        severity_id = finding["severity_id"]
         if not isinstance(severity_id, int) or severity_id not in [1, 2, 3, 4, 5]:
-            result['errors'].append(f'Invalid severity_id: {severity_id}. Must be 1-5')
+            result["errors"].append(f"Invalid severity_id: {severity_id}. Must be 1-5")
         elif severity_id == 5:
             # severity_id 5 is often "Informational" - treat as Low (4)
-            result['warnings'].append(f'Severity ID 5 found, treating as Low severity')
-    
+            result["warnings"].append(f"Severity ID 5 found, treating as Low severity")
+
     # Validate status
-    if 'status' in finding:
-        status = finding['status']
-        valid_statuses = ['Success', 'Failed', 'New', 'Suppressed', 'Unknown']
+    if "status" in finding:
+        status = finding["status"]
+        valid_statuses = ["Success", "Failed", "New", "Suppressed", "Unknown"]
         if status not in valid_statuses:
-            result['warnings'].append(f'Unexpected status value: {status}')
-    
+            result["warnings"].append(f"Unexpected status value: {status}")
+
     # Check for message length
-    if 'message' in finding:
-        message = finding['message']
+    if "message" in finding:
+        message = finding["message"]
         if len(message) > 1000:
-            result['warnings'].append('Message is very long and may be truncated')
-    
-    result['valid'] = len(result['errors']) == 0
+            result["warnings"].append("Message is very long and may be truncated")
+
+    result["valid"] = len(result["errors"]) == 0
     return result
 
 
 def sanitize_filename(filename: str) -> str:
     """Sanitize filename for safe file operations."""
     # Remove or replace invalid characters
-    sanitized = re.sub(r'[<>:"/\\|?*]', '_', filename)
-    
+    sanitized = re.sub(r'[<>:"/\\|?*]', "_", filename)
+
     # Remove leading/trailing spaces and dots
-    sanitized = sanitized.strip(' .')
-    
+    sanitized = sanitized.strip(" .")
+
     # Limit length
     if len(sanitized) > 200:
         sanitized = sanitized[:200]
-    
-    return sanitized or 'unnamed_file'
+
+    return sanitized or "unnamed_file"
 
 
 def validate_batch_size(batch_size: int) -> bool:
@@ -223,21 +219,18 @@ def validate_batch_size(batch_size: int) -> bool:
 
 def validate_filter_preset(preset: Dict[str, Any]) -> Dict[str, Any]:
     """Validate filter preset structure."""
-    result = {
-        'valid': True,
-        'errors': []
-    }
-    
-    required_fields = ['name', 'description', 'filters']
+    result = {"valid": True, "errors": []}
+
+    required_fields = ["name", "description", "filters"]
     for field in required_fields:
         if field not in preset:
-            result['errors'].append(f'Missing required field: {field}')
-    
-    if 'filters' in preset:
+            result["errors"].append(f"Missing required field: {field}")
+
+    if "filters" in preset:
         try:
-            FilterCriteria(**preset['filters'])
+            FilterCriteria(**preset["filters"])
         except ValueError as e:
-            result['errors'].append(f'Invalid filter criteria: {str(e)}')
-    
-    result['valid'] = len(result['errors']) == 0
+            result["errors"].append(f"Invalid filter criteria: {str(e)}")
+
+    result["valid"] = len(result["errors"]) == 0
     return result

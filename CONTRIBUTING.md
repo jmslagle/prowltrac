@@ -31,18 +31,88 @@ Thank you for your interest in contributing to Prowltrac! This guide will help y
 
 ## Development Guidelines
 
-### Code Style
+### Code Style & Quality Checks
 
-We use automated formatting and linting:
+We use automated formatting, linting, and security checks. **Run these locally before submitting PRs:**
+
+#### **Formatting (Required)**
+```bash
+# Auto-format code with black
+python -m black src/ tests/
+
+# Sort imports
+python -m isort src/ tests/
+
+# Check formatting without making changes
+python -m black --check src/ tests/
+```
+
+#### **Linting**
+```bash
+# Check code style
+python -m flake8 src/ tests/
+
+# Type checking
+python -m mypy src/
+```
+
+#### **Security Checks**
+```bash
+# Install security tools
+pip install bandit safety
+
+# Check for security issues in code
+python -m bandit -r src/ -f json -o bandit-report.json
+
+# Check for known vulnerabilities in dependencies
+python -m safety check --json --output safety-report.json
+```
+
+#### **Pre-commit Setup**
+Install pre-commit hooks to run these checks automatically:
 
 ```bash
-# Format code
-black src/ tests/
-isort src/ tests/
+# Install pre-commit
+pip install pre-commit
 
-# Lint code
-flake8 src/ tests/
-mypy src/
+# Install hooks
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
+```
+
+#### **Quick Check Script**
+Run all checks at once:
+
+```bash
+# Create a simple check script
+cat > check_code.sh << 'EOF'
+#!/bin/bash
+set -e
+
+echo "🔍 Running code quality checks..."
+
+echo "📝 Formatting with black..."
+python -m black src/ tests/
+
+echo "📋 Sorting imports..."
+python -m isort src/ tests/
+
+echo "🔍 Linting with flake8..."
+python -m flake8 src/ tests/
+
+echo "🔒 Security scan with bandit..."
+python -m bandit -r src/ -f json -o bandit-report.json
+
+echo "🛡️ Dependency check with safety..."
+python -m safety check --json --output safety-report.json
+
+echo "✅ All checks passed!"
+EOF
+
+chmod +x check_code.sh
+./check_code.sh
 ```
 
 ### Testing
