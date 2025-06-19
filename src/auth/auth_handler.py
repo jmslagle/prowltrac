@@ -214,7 +214,9 @@ class AuthHandler:
                         else:
                             # Token might be invalid
                             break
-                    except Exception:  # nosec B112 - Intentionally continuing on endpoint test failures
+                    except (
+                        Exception
+                    ):  # nosec B112 - Intentionally continuing on endpoint test failures
                         # Try next endpoint
                         continue
 
@@ -251,7 +253,9 @@ class AuthHandler:
 
             # Log payload without password
             safe_payload = {k: v for k, v in auth_payload.items() if k != "password"}
-            safe_payload["password"] = "[REDACTED]"  # nosec B105 - Not a hardcoded password, just redaction text
+            safe_payload["password"] = (
+                "[REDACTED]"  # nosec B105 - Not a hardcoded password, just redaction text
+            )
             self.logger.debug(f"Auth payload: {safe_payload}")
 
             response = self.session.post(
